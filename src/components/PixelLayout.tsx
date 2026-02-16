@@ -1,33 +1,45 @@
 "use client";
 
 import Link from "next/link";
+import { PixelButton } from "./PixelButton";
 
 type PixelLayoutProps = {
+  /** Page title (e.g. "Quest Scroll", "Character Sheet") */
   title: string;
-  /** Right-side link label (e.g. "View Profile") */
-  navLabel: string;
-  /** Right-side link href (e.g. "/profile") */
-  navHref: string;
+  /** Right-side nav: e.g. [{ label: "Profile", href: "/profile" }] */
+  navLinks?: Array<{ label: string; href: string }>;
   children: React.ReactNode;
 };
 
+const DEFAULT_NAV = [
+  { label: "Daily", href: "/daily" },
+  { label: "Profile", href: "/profile" },
+];
+
 /**
- * Reusable RPG-style frame: top panel (title + nav link) and content area.
- * Theme layer only – remove component usage to revert.
+ * RPG-style layout: app title "Ascendancy Guild", page title, nav links, centered frame.
  */
-export function PixelLayout({ title, navLabel, navHref, children }: PixelLayoutProps) {
+export function PixelLayout({
+  title,
+  navLinks = DEFAULT_NAV,
+  children,
+}: PixelLayoutProps) {
   return (
-    <main className="max-w-lg mx-auto px-4 py-6">
-      <header className="pixel-panel pixel-border flex justify-between items-center mb-6">
-        <h1 className="pixel-title text-xl">{title}</h1>
-        <Link
-          href={navHref}
-          className="pixel-button no-underline text-inherit"
-        >
-          {navLabel}
-        </Link>
+    <main className="max-w-lg mx-auto px-4 py-6 pixel-theme-bg min-h-screen">
+      <header className="pixel-frame pixel-panel flex flex-wrap justify-between items-center gap-3 mb-6">
+        <div className="flex items-baseline gap-3">
+          <h1 className="pixel-title text-lg tracking-wide">Ascendancy Guild</h1>
+          <span className="pixel-subtitle text-sm">— {title}</span>
+        </div>
+        <nav className="flex gap-2">
+          {navLinks.map(({ label, href }) => (
+            <PixelButton key={href} href={href} variant="secondary">
+              {label}
+            </PixelButton>
+          ))}
+        </nav>
       </header>
-      <div className="pixel-theme-content">{children}</div>
+      <div className="pixel-frame pixel-panel p-4 md:p-6">{children}</div>
     </main>
   );
 }

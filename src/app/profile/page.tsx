@@ -98,16 +98,16 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <PixelLayout title="Character Sheet" navLabel="Back to Daily" navHref="/daily">
-        <p className="text-[var(--pixel-text-muted)]">Loading…</p>
+      <PixelLayout title="Character Sheet">
+        <p className="pixel-subtitle">Loading…</p>
       </PixelLayout>
     );
   }
 
   if (error || !summary) {
     return (
-      <PixelLayout title="Character Sheet" navLabel="Back to Daily" navHref="/daily">
-        <p className="text-red-600">{error ?? "Not found"}</p>
+      <PixelLayout title="Character Sheet">
+        <p style={{ color: "var(--danger)" }}>{error ?? "Not found"}</p>
       </PixelLayout>
     );
   }
@@ -125,66 +125,68 @@ export default function ProfilePage() {
   const classId = profile.class_selected ?? "";
 
   return (
-    <PixelLayout title="Character Sheet" navLabel="Back to Daily" navHref="/daily">
-      <div className="pixel-panel pixel-border p-4 flex items-center gap-4 mb-6">
+    <PixelLayout title="Character Sheet">
+      <div className="pixel-panel p-4 flex items-center gap-4 mb-6">
         {classId && (
-          <div className="flex-shrink-0 w-16 h-16 relative">
+          <div
+            className="flex-shrink-0 w-28 h-28 relative"
+            style={{ imageRendering: "pixelated" }}
+          >
             <Image
               src={`/characters/${classId.toLowerCase()}.svg`}
               alt={classId}
-              width={64}
-              height={64}
+              width={112}
+              height={112}
               className="object-contain"
+              style={{ imageRendering: "pixelated" }}
             />
           </div>
         )}
         <div>
-          <h2 className="pixel-title text-xl">
+          <h2 className="pixel-title text-xl" style={{ color: "var(--ink)" }}>
             {profile.class_selected ?? "—"} · Level {level.level}
           </h2>
         </div>
       </div>
 
-      <div className="pixel-panel pixel-border p-4 mt-6">
-        <div className="flex justify-between text-sm text-[var(--pixel-text-muted)] mb-1">
+      <div className="pixel-panel p-4 mt-6">
+        <div className="flex justify-between text-sm pixel-subtitle mb-1">
           <span>XP</span>
           <span>
             {level.xp_into_level} / {level.xp_needed_for_next_level || "—"}
           </span>
         </div>
-        <div
-          className="h-4 overflow-hidden pixel-border"
-          style={{ background: "var(--pixel-panel-dark)" }}
-        >
+        <div className="pixel-progress mt-2">
           <div
-            className="h-full transition-all"
-            style={{
-              width: `${xpPct}%`,
-              background: "var(--pixel-accent-bright)",
-            }}
+            className="pixel-progress__fill pixel-progress__fill--animated"
+            style={{ width: `${xpPct}%` }}
           />
         </div>
       </div>
 
       <div className="mt-6 flex gap-4">
-        <div className="pixel-badge px-4 py-2">
+        <div className="pixel-badge pixel-badge--accent px-4 py-2">
           <p className="text-xs opacity-90">Current streak</p>
           <p className="text-lg font-bold">{progress.streak_current}</p>
         </div>
-        <div className="pixel-badge px-4 py-2">
+        <div className="pixel-badge pixel-badge--accent px-4 py-2">
           <p className="text-xs opacity-90">Best streak</p>
           <p className="text-lg font-bold">{progress.streak_best}</p>
         </div>
       </div>
 
       {displayAttrs.length > 0 && (
-        <div className="mt-6 pixel-panel pixel-border p-4">
-          <h2 className="pixel-title text-lg mb-3">Attributes</h2>
+        <div className="mt-6 pixel-panel p-4">
+          <h2 className="pixel-title text-lg mb-3" style={{ color: "var(--ink)" }}>
+            Attributes
+          </h2>
           <ul className="space-y-2">
             {displayAttrs.map(([key, value]) => (
               <li key={key} className="flex justify-between text-sm">
-                <span className="text-[var(--pixel-text)]">{key}</span>
-                <span className="font-semibold">{String(value)}</span>
+                <span style={{ color: "var(--ink)" }}>{key}</span>
+                <span className="font-semibold" style={{ color: "var(--ink)" }}>
+                  {String(value)}
+                </span>
               </li>
             ))}
           </ul>
@@ -192,9 +194,11 @@ export default function ProfilePage() {
       )}
 
       <div className="mt-8">
-        <h2 className="pixel-title text-lg mb-2">Completed today</h2>
+        <h2 className="pixel-title text-lg mb-2" style={{ color: "var(--ink)" }}>
+          Completed today
+        </h2>
         {recent.today.length === 0 ? (
-          <p className="text-sm text-[var(--pixel-text-muted)]">No quests completed today yet.</p>
+          <p className="text-sm pixel-subtitle">No quests completed today yet.</p>
         ) : (
           <ul className="space-y-2">
             {recent.today.map((q, i) => (
@@ -202,8 +206,10 @@ export default function ProfilePage() {
                 key={i}
                 className="pixel-card flex justify-between items-center py-2 px-3"
               >
-                <span className="font-medium">{q.title}</span>
-                <span className="text-sm text-[var(--pixel-text-muted)]">
+                <span className="font-medium" style={{ color: "var(--ink)" }}>
+                  {q.title}
+                </span>
+                <span className="text-sm pixel-subtitle">
                   {q.category} · {q.completion_percent}%
                 </span>
               </li>
@@ -213,26 +219,24 @@ export default function ProfilePage() {
       </div>
 
       <div className="mt-8">
-        <h2 className="pixel-title text-lg mb-2">Last 7 days</h2>
+        <h2 className="pixel-title text-lg mb-2" style={{ color: "var(--ink)" }}>
+          Last 7 days
+        </h2>
         {recent.last7days.length === 0 ? (
-          <p className="text-sm text-[var(--pixel-text-muted)]">No recent activity.</p>
+          <p className="text-sm pixel-subtitle">No recent activity.</p>
         ) : (
           <ul className="space-y-4">
             {recent.last7days.map((day) => (
-              <li key={day.date} className="pixel-panel pixel-border p-3">
-                <p className="text-sm font-semibold text-[var(--pixel-text-muted)] mb-2">
-                  {day.date}
-                </p>
+              <li key={day.date} className="pixel-panel p-3">
+                <p className="text-sm font-semibold pixel-subtitle mb-2">{day.date}</p>
                 <ul className="space-y-1 pl-2">
                   {day.quests.length === 0 ? (
-                    <li className="text-sm text-[var(--pixel-text-muted)]">No quests logged</li>
+                    <li className="text-sm pixel-subtitle">No quests logged</li>
                   ) : (
                     day.quests.map((q, i) => (
                       <li key={i} className="flex justify-between text-sm py-1">
-                        <span>{q.title}</span>
-                        <span className="text-[var(--pixel-text-muted)]">
-                          {q.completion_percent}%
-                        </span>
+                        <span style={{ color: "var(--ink)" }}>{q.title}</span>
+                        <span className="pixel-subtitle">{q.completion_percent}%</span>
                       </li>
                     ))
                   )}

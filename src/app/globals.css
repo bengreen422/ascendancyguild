@@ -26,18 +26,27 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Pixel theme layer: remove the block below and the pixel-theme import to revert */
+/* Pixel theme V1: remove block below and pixel-theme import to revert */
 body {
-  background-color: var(--pixel-bg);
+  background-color: var(--bg0);
   background-image:
-    linear-gradient(90deg, var(--pixel-bg) 0%, var(--pixel-bg-subtle) 50%, var(--pixel-bg) 100%),
+    linear-gradient(165deg, var(--bg0) 0%, var(--bg1) 40%, var(--bg0) 100%),
     repeating-linear-gradient(
       0deg,
-      transparent,
+      transparent 0px,
       transparent 2px,
-      rgba(0, 0, 0, 0.03) 2px,
-      rgba(0, 0, 0, 0.03) 4px
+      rgba(0, 0, 0, 0.04) 2px,
+      rgba(0, 0, 0, 0.04) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
     );
-  color: var(--pixel-text);
+  color: var(--ink);
   font-family: "Courier New", Consolas, "Liberation Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

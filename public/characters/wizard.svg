@@ -1,10 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" fill="#2c1810"/>
-  <!-- silhouette: hat + robe + book -->
-  <g fill="#8b6914" stroke="#5c4610" stroke-width="1">
-    <path d="M8 24 L32 8 L56 24 L52 28 L12 28 Z"/>
-    <rect x="24" y="28" width="16" height="28" rx="1"/>
-    <rect x="40" y="36" width="14" height="18" rx="1"/>
-    <rect x="42" y="40" width="2" height="10"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect width="128" height="128" fill="#2a1f16"/>
+  <ellipse cx="64" cy="118" rx="40" ry="6" fill="#1a1410"/>
+  <!-- hat -->
+  <path d="M24 52 L64 20 L104 52 L100 56 L28 56 Z" fill="#1a1410"/>
+  <path d="M28 48 L64 24 L100 48 L96 52 L32 52 Z" fill="#2a1f16"/>
+  <path d="M32 44 L64 28 L96 44 L92 48 L36 48 Z" fill="#3d2c1e"/>
+  <rect x="58" y="48" width="12" height="12" fill="#4a3728"/>
+  <!-- robe -->
+  <rect x="36" y="60" width="56" height="52" fill="#2d3d4a"/>
+  <rect x="40" y="64" width="48" height="46" fill="#3d4a5c"/>
+  <rect x="44" y="68" width="40" height="40" fill="#4a5c6b"/>
+  <!-- staff -->
+  <rect x="22" y="16" width="6" height="88" fill="#4a3728"/>
+  <rect x="23" y="18" width="4" height="84" fill="#5c4a3a"/>
+  <circle cx="25" cy="22" r="5" fill="#c9a227"/>
+  <circle cx="25" cy="22" r="3" fill="#e8d48a"/>
+  <!-- book -->
+  <rect x="88" y="72" width="20" height="26" fill="#3d2c1e"/>
+  <rect x="90" y="74" width="16" height="22" fill="#f5ead4"/>
+  <rect x="92" y="78" width="2" height="14" fill="#1a1410"/>
+  <!-- face -->
+  <rect x="50" y="44" width="28" height="24" rx="2" fill="#a67c4a"/>
+  <rect x="52" y="46" width="24" height="20" rx="1" fill="#b88a5c"/>
+  <rect x="54" y="50" width="8" height="4" fill="#1a1410"/>
+  <rect x="66" y="50" width="8" height="4" fill="#1a1410"/>
 </svg>

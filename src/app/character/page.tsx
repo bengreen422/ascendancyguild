@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { PixelLayout } from "@/components/PixelLayout";
+import { PixelCard } from "@/components/PixelCard";
+import { PixelButton } from "@/components/PixelButton";
 
 const CLASSES = [
   {
@@ -124,60 +126,70 @@ export default function CharacterPage() {
   }
 
   return (
-    <PixelLayout title="Choose Your Class" navLabel="To Daily" navHref="/daily">
-      <p className="mt-2 text-[var(--pixel-text-muted)]">
+    <PixelLayout title="Choose Your Class">
+      <p className="mt-2 pixel-subtitle text-sm">
         This shapes the tone of your daily quest scroll. You can change it later.
       </p>
 
       {reasoning && (
-        <div className="mt-4 pixel-panel pixel-border p-3 text-sm text-[var(--pixel-text)]">
+        <div className="mt-4 pixel-panel p-3 text-sm" style={{ color: "var(--ink)" }}>
           {reasoning}
         </div>
       )}
 
       <div className="mt-6 space-y-4">
         {CLASSES.map((c) => (
-          <button
+          <PixelCard
             key={c.id}
+            as="button"
             type="button"
+            selected={selected === c.id}
+            sparkle={recommended === c.id}
             onClick={() => setSelected(c.id)}
-            className={`w-full text-left pixel-card flex gap-4 items-start transition-all ${
-              selected === c.id ? "selected" : ""
-            }`}
+            className="w-full text-left flex gap-4 items-start"
           >
-            <div className="flex-shrink-0 w-16 h-16 relative">
+            <div
+              className="flex-shrink-0 w-24 h-24 relative"
+              style={{ imageRendering: "pixelated" }}
+            >
               <Image
                 src={`/characters/${c.id.toLowerCase()}.svg`}
                 alt={c.id}
-                width={64}
-                height={64}
+                width={96}
+                height={96}
                 className="object-contain"
+                style={{ imageRendering: "pixelated" }}
               />
             </div>
             <div className="min-w-0 flex-1">
-              <span className="font-semibold text-[var(--pixel-text)]">{c.id}</span>
+              <span className="pixel-title font-semibold" style={{ color: "var(--ink)" }}>
+                {c.id}
+              </span>
               {recommended === c.id && (
-                <span className="ml-2 pixel-badge">Recommended</span>
+                <span className="ml-2 pixel-badge pixel-badge--gold">Recommended</span>
               )}
-              <p className="mt-1 text-sm text-[var(--pixel-text-muted)]">{c.description}</p>
+              <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
+                {c.description}
+              </p>
             </div>
-          </button>
+          </PixelCard>
         ))}
       </div>
 
       {error && (
-        <p className="mt-4 text-sm text-red-600" role="alert">
+        <p className="mt-4 text-sm" style={{ color: "var(--danger)" }} role="alert">
           {error}
         </p>
       )}
 
-      <button
+      <PixelButton
         onClick={handleConfirm}
         disabled={loading}
-        className="mt-8 w-full pixel-button py-3"
+        variant="primary"
+        className="mt-8 w-full py-3"
       >
         {loading ? "Saving…" : "Confirm and continue"}
-      </button>
+      </PixelButton>
     </PixelLayout>
   );
 }

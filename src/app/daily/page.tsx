@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { PixelLayout } from "@/components/PixelLayout";
+import { PixelCard } from "@/components/PixelCard";
+import { PixelButton } from "@/components/PixelButton";
 
 const TIME_OPTIONS = [10, 20, 40, 60] as const;
 const ENERGY_OPTIONS = [
@@ -252,42 +254,45 @@ export default function DailyPage() {
 
   if (!ready) {
     return (
-      <PixelLayout title="Daily Quest Scroll" navLabel="View Profile" navHref="/profile">
-        <p className="text-[var(--pixel-text-muted)]">Loading…</p>
+      <PixelLayout title="Quest Scroll">
+        <p className="pixel-subtitle">Loading…</p>
       </PixelLayout>
     );
   }
 
   if (!checkin) {
     return (
-      <PixelLayout title="Daily Quest Scroll" navLabel="View Profile" navHref="/profile">
-        <div className="pixel-panel pixel-border p-4 mt-4">
-          <h2 className="pixel-title text-xl">Daily Check-in</h2>
-          <p className="mt-2 text-sm text-[var(--pixel-text-muted)]">
+      <PixelLayout title="Quest Scroll">
+        <div className="pixel-panel p-4">
+          <h2 className="pixel-title text-xl" style={{ color: "var(--ink)" }}>
+            Daily Check-in
+          </h2>
+          <p className="mt-2 text-sm pixel-subtitle">
             Quick answers so we can build your scroll.
           </p>
 
           <form onSubmit={submitCheckin} className="mt-6 space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-[var(--pixel-text)] mb-2">
+              <label className="block text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
                 Time available (minutes)
               </label>
               <div className="flex flex-wrap gap-2">
                 {TIME_OPTIONS.map((t) => (
-                  <button
+                  <PixelButton
                     key={t}
                     type="button"
+                    variant="secondary"
                     onClick={() => setTimeAvailable(t)}
-                    className={`pixel-button ${timeAvailable === t ? "ring-2 ring-[var(--pixel-accent-bright)]" : ""}`}
+                    className={timeAvailable === t ? "ring-2 ring-[var(--accent)]" : ""}
                   >
                     {t}
-                  </button>
+                  </PixelButton>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-[var(--pixel-text)] mb-2">
+              <label className="block text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
                 Energy level
               </label>
               <div className="flex gap-4">
@@ -298,45 +303,47 @@ export default function DailyPage() {
                       name="energy"
                       checked={energy === value}
                       onChange={() => setEnergy(value)}
-                      className="accent-[var(--pixel-accent)]"
+                      style={{ accentColor: "var(--accent)" }}
                     />
-                    <span className="text-[var(--pixel-text)]">{label}</span>
+                    <span style={{ color: "var(--ink)" }}>{label}</span>
                   </label>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-[var(--pixel-text)] mb-2">
+              <label className="block text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
                 Avoid today (optional)
               </label>
               <div className="flex flex-wrap gap-2">
                 {AVOID_TAG_OPTIONS.map((tag) => (
-                  <button
+                  <PixelButton
                     key={tag}
                     type="button"
+                    variant="secondary"
                     onClick={() => toggleAvoid(tag)}
-                    className={`pixel-button ${avoidTags.includes(tag) ? "ring-2 ring-amber-600" : ""}`}
+                    className={avoidTags.includes(tag) ? "ring-2 ring-[var(--gold)]" : ""}
                   >
                     {tag.replace(/_/g, " ")}
-                  </button>
+                  </PixelButton>
                 ))}
               </div>
             </div>
 
             {checkinError && (
-              <p className="text-sm text-red-600" role="alert">
+              <p className="text-sm" style={{ color: "var(--danger)" }} role="alert">
                 {checkinError}
               </p>
             )}
 
-            <button
+            <PixelButton
               type="submit"
               disabled={checkinSubmitting || loadingScroll}
-              className="w-full pixel-button py-3"
+              variant="primary"
+              className="w-full py-3"
             >
               {checkinSubmitting || loadingScroll ? "Building your scroll…" : "Continue"}
-            </button>
+            </PixelButton>
           </form>
         </div>
       </PixelLayout>
@@ -356,30 +363,34 @@ export default function DailyPage() {
         }, 0) / quests.length
       )
     : 0;
+  const totalPlannedMinutes = quests.reduce((s, q) => s + q.est_minutes, 0);
 
   return (
-    <PixelLayout title="Daily Quest Scroll" navLabel="View Profile" navHref="/profile">
-      <div className="pixel-panel pixel-border p-4 mt-4">
-        <h2 className="pixel-title text-xl">Your Quest Scroll</h2>
-        <p className="mt-2 text-sm text-[var(--pixel-text-muted)]">
+    <PixelLayout title="Quest Scroll">
+      <div className="pixel-panel p-4">
+        <h2 className="pixel-title text-xl" style={{ color: "var(--ink)" }}>
+          Your Quest Scroll
+        </h2>
+        <p className="mt-2 text-sm pixel-subtitle">
           Today&apos;s quests. Mark done or log progress as you go.
         </p>
 
         {progress != null && (
           <div className="mt-4 flex flex-wrap gap-2">
-            <span className="pixel-badge">XP: {progress.xp_total}</span>
-            <span className="pixel-badge">Streak: {progress.streak_current}</span>
+            <span className="pixel-badge pixel-badge--accent">XP: {progress.xp_total}</span>
+            <span className="pixel-badge pixel-badge--accent">Streak: {progress.streak_current}</span>
             <span className="pixel-badge">Best: {progress.streak_best}</span>
-            <span className="pixel-badge">Today: {totalPercent}%</span>
+            <span className="pixel-badge">{totalPlannedMinutes} min planned</span>
+            <span className="pixel-badge pixel-badge--gold">Today: {totalPercent}%</span>
           </div>
         )}
 
         {loadingScroll && quests.length === 0 && (
-          <p className="mt-4 text-[var(--pixel-text-muted)]">Generating your scroll…</p>
+          <p className="mt-4 pixel-subtitle">Generating your scroll…</p>
         )}
 
         {quests.length === 0 && !loadingScroll && checkin && (
-          <p className="mt-4 text-[var(--pixel-text-muted)]">No quests yet. Complete check-in first.</p>
+          <p className="mt-4 pixel-subtitle">No quests yet. Complete check-in first.</p>
         )}
       </div>
 
@@ -389,60 +400,70 @@ export default function DailyPage() {
           if (!list.length) return null;
           return (
             <div key={cat}>
-              <h2 className="pixel-title text-lg mb-3">{cat}</h2>
+              <h2 className="pixel-title text-lg mb-3" style={{ color: "var(--ink)" }}>
+                {cat}
+              </h2>
               <ul className="space-y-4">
                 {list.map((q) => {
                   const log = logs.find((l) => l.daily_quest_id === q.id);
                   const pct = log?.completion_percent ?? 0;
                   const isBinary = q.completion_type === "binary";
                   return (
-                    <li key={q.id} className="pixel-card p-4">
-                      <p className="font-semibold text-[var(--pixel-text)]">{q.title}</p>
-                      <p className="mt-1 text-sm text-[var(--pixel-text-muted)]">{q.description}</p>
-                      <p className="mt-1 text-xs text-[var(--pixel-text-muted)]">~{q.est_minutes} min</p>
-                      <div className="mt-3 flex items-center gap-2 flex-wrap">
-                        {isBinary ? (
-                          <button
-                            type="button"
-                            onClick={() => logQuest(q.id, pct >= 100 ? false : true)}
-                            disabled={logSubmitting === q.id}
-                            className={`pixel-button text-sm ${pct >= 100 ? "opacity-80" : ""}`}
-                          >
-                            {pct >= 100 ? "Done" : "Mark Done"}
-                          </button>
-                        ) : (
-                          <>
-                            <input
-                              type="number"
-                              min={0}
-                              step={q.metric_name === "minutes" ? 1 : 1}
-                              placeholder={q.metric_name === "minutes" ? "Minutes" : "Value"}
-                              value={measurableValues[q.id] ?? ""}
-                              onChange={(e) =>
-                                setMeasurableValues((prev) => ({
-                                  ...prev,
-                                  [q.id]: e.target.value,
-                                }))
-                              }
-                              className="w-24 px-2 py-1.5 pixel-border bg-[var(--pixel-panel)] text-[var(--pixel-text)] text-sm"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const v = Number(measurableValues[q.id]);
-                                if (!Number.isNaN(v)) logQuest(q.id, undefined, v);
-                              }}
+                    <li key={q.id}>
+                      <PixelCard className="p-4">
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          <span className="pixel-badge">{q.category}</span>
+                          <span className="pixel-badge">~{q.est_minutes} min</span>
+                          {pct > 0 && (
+                            <span className="pixel-badge pixel-badge--gold">{pct}%</span>
+                          )}
+                        </div>
+                        <p className="font-semibold" style={{ color: "var(--ink)" }}>
+                          {q.title}
+                        </p>
+                        <p className="mt-1 text-sm pixel-subtitle">{q.description}</p>
+                        <div className="mt-3 flex items-center gap-2 flex-wrap">
+                          {isBinary ? (
+                            <PixelButton
+                              variant={pct >= 100 ? "secondary" : "primary"}
+                              onClick={() => logQuest(q.id, pct >= 100 ? false : true)}
                               disabled={logSubmitting === q.id}
-                              className="pixel-button text-sm"
+                              className="text-sm"
                             >
-                              Save
-                            </button>
-                          </>
-                        )}
-                        {pct > 0 && (
-                          <span className="text-xs text-[var(--pixel-text-muted)]">{pct}%</span>
-                        )}
-                      </div>
+                              {pct >= 100 ? "Done" : "Mark Done"}
+                            </PixelButton>
+                          ) : (
+                            <>
+                              <input
+                                type="number"
+                                min={0}
+                                step={q.metric_name === "minutes" ? 1 : 1}
+                                placeholder={q.metric_name === "minutes" ? "Minutes" : "Value"}
+                                value={measurableValues[q.id] ?? ""}
+                                onChange={(e) =>
+                                  setMeasurableValues((prev) => ({
+                                    ...prev,
+                                    [q.id]: e.target.value,
+                                  }))
+                                }
+                                className="w-24 px-2 py-1.5 text-sm border-2 border-[var(--frame-border)] bg-[var(--panel0)]"
+                                style={{ color: "var(--ink)" }}
+                              />
+                              <PixelButton
+                                variant="primary"
+                                onClick={() => {
+                                  const v = Number(measurableValues[q.id]);
+                                  if (!Number.isNaN(v)) logQuest(q.id, undefined, v);
+                                }}
+                                disabled={logSubmitting === q.id}
+                                className="text-sm"
+                              >
+                                Save
+                              </PixelButton>
+                            </>
+                          )}
+                        </div>
+                      </PixelCard>
                     </li>
                   );
                 })}

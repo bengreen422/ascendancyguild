@@ -1,151 +1,287 @@
 /**
- * Pixel-art fantasy theme layer for Ascendancy Guild.
- * Can be removed by deleting this file and its import from globals.css.
+ * Pixel-art fantasy theme V1 – Ascendancy Guild.
+ * Brighter palette, textured panels, depth, subtle animations.
+ * Revert: delete this file and remove its import from globals.css.
  */
 
-/* Palette – parchment / D&D inspired */
+/* ---- Palette (warm parchment, teal/emerald, gold, deep ink) ---- */
 :root {
-  --pixel-bg: #2c1810;
-  --pixel-bg-subtle: #1a0f0a;
-  --pixel-panel: #e8d5b5;
-  --pixel-panel-dark: #d4bc8f;
-  --pixel-border: #8b6914;
-  --pixel-border-dark: #5c4610;
-  --pixel-accent: #6b4423;
-  --pixel-accent-bright: #a66b2a;
-  --pixel-text: #2c1810;
-  --pixel-text-muted: #5c4033;
-  --pixel-highlight: #f4e4c1;
+  --bg0: #3d2c1e;
+  --bg1: #2a1f16;
+  --panel0: #f5ead4;
+  --panel1: #e8d9bc;
+  --panel2: #ddc9a4;
+  --ink: #1a1410;
+  --muted: #5c4a3a;
+  --accent: #0d6b5c;
+  --accent2: #0a8c78;
+  --gold: #c9a227;
+  --gold-light: #e8d48a;
+  --danger: #a63d3d;
+  --frame-border: #6b5344;
+  --frame-shadow: #2a1f16;
 }
 
-/* Pixel-style font stack (system only; no external font) */
-.pixel-font,
-.pixel-theme {
-  font-family: "Courier New", Consolas, "Liberation Mono", monospace;
+/* Legacy aliases for gradual migration */
+:root {
+  --pixel-bg: var(--bg0);
+  --pixel-bg-subtle: var(--bg1);
+  --pixel-panel: var(--panel0);
+  --pixel-panel-dark: var(--panel1);
+  --pixel-border: var(--frame-border);
+  --pixel-border-dark: var(--frame-shadow);
+  --pixel-text: var(--ink);
+  --pixel-text-muted: var(--muted);
+  --pixel-highlight: var(--panel0);
+  --pixel-accent: var(--accent);
+  --pixel-accent-bright: var(--accent2);
 }
 
-/* Subtle dithered background using CSS gradients */
-.pixel-theme body,
-body.pixel-theme {
-  background-color: var(--pixel-bg);
+/* ---- Layered background (base + dither) ---- */
+.pixel-theme-bg {
+  background-color: var(--bg0);
   background-image:
-    linear-gradient(90deg, var(--pixel-bg) 0%, var(--pixel-bg-subtle) 50%, var(--pixel-bg) 100%),
+    linear-gradient(165deg, var(--bg0) 0%, var(--bg1) 40%, var(--bg0) 100%),
     repeating-linear-gradient(
       0deg,
-      transparent,
+      transparent 0px,
       transparent 2px,
-      rgba(0, 0, 0, 0.03) 2px,
-      rgba(0, 0, 0, 0.03) 4px
+      rgba(0, 0, 0, 0.04) 2px,
+      rgba(0, 0, 0, 0.04) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
     );
-  color: var(--pixel-text);
+  min-height: 100vh;
 }
 
-/* Pixel border effect using box-shadow (stepped/chunky) */
-.pixel-border {
-  box-shadow:
-    inset 0 0 0 2px var(--pixel-border-dark),
-    inset 0 0 0 4px var(--pixel-border),
-    inset 2px 2px 0 6px var(--pixel-panel-dark),
-    0 0 0 2px var(--pixel-border-dark),
-    2px 2px 0 2px var(--pixel-border);
-}
-
-/* Panel – parchment style */
-.pixel-panel {
-  background: linear-gradient(180deg, var(--pixel-panel) 0%, var(--pixel-panel-dark) 100%);
-  color: var(--pixel-text);
-  padding: 1rem 1.25rem;
-  border: none;
-  box-shadow:
-    inset 0 0 0 3px var(--pixel-border),
-    inset 0 2px 4px rgba(255, 255, 255, 0.3),
-    3px 3px 0 var(--pixel-border-dark),
-    0 0 0 1px var(--pixel-border);
-}
-
-/* Title – rune/menu header feel */
+/* ---- Typography ---- */
 .pixel-title {
   font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--pixel-text);
-  text-shadow: 1px 1px 0 var(--pixel-highlight);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-shadow: 1px 1px 0 var(--panel0);
 }
 
-/* Button */
+.pixel-subtitle {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* ---- Frame (thick pixel border + drop shadow) ---- */
+.pixel-frame {
+  box-shadow:
+    inset 0 0 0 4px var(--frame-border),
+    inset 0 0 0 6px var(--panel2),
+    inset 2px 2px 0 8px var(--panel1),
+    0 4px 0 var(--frame-shadow),
+    4px 6px 12px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(180deg, var(--panel0) 0%, var(--panel1) 50%, var(--panel2) 100%);
+  position: relative;
+}
+
+/* ---- Panel (parchment with inner shadow + texture) ---- */
+.pixel-panel {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 4px,
+      rgba(0, 0, 0, 0.02) 4px,
+      rgba(0, 0, 0, 0.02) 8px
+    ),
+    linear-gradient(180deg, var(--panel0) 0%, var(--panel1) 40%, var(--panel2) 100%);
+  color: var(--ink);
+  padding: 1rem 1.25rem;
+  box-shadow:
+    inset 0 0 0 2px rgba(201, 162, 39, 0.25),
+    inset 0 2px 8px rgba(255, 255, 255, 0.4),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.06),
+    0 2px 0 var(--frame-border),
+    2px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ---- Card (clickable panel with hover) ---- */
+.pixel-card {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 4px,
+      rgba(0, 0, 0, 0.015) 4px,
+      rgba(0, 0, 0, 0.015) 8px
+    ),
+    linear-gradient(180deg, var(--panel0) 0%, var(--panel1) 100%);
+  color: var(--ink);
+  padding: 1rem;
+  box-shadow:
+    inset 0 0 0 2px rgba(201, 162, 39, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    0 2px 0 var(--frame-border),
+    2px 3px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.pixel-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 0 2px rgba(201, 162, 39, 0.35),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    0 3px 0 var(--frame-border),
+    3px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.pixel-card.selected {
+  box-shadow:
+    inset 0 0 0 3px var(--accent),
+    inset 0 2px 6px rgba(255, 255, 255, 0.4),
+    0 2px 0 var(--frame-border),
+    2px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ---- Divider (rune-like) ---- */
+.pixel-divider {
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--frame-border) 0px,
+    var(--frame-border) 4px,
+    var(--panel2) 4px,
+    var(--panel2) 8px
+  );
+  border: none;
+  margin: 0.75rem 0;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ---- Badge / chip ---- */
+.pixel-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: linear-gradient(180deg, var(--panel2) 0%, var(--frame-border) 100%);
+  color: var(--ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 1px 0 var(--frame-shadow);
+}
+
+.pixel-badge--gold {
+  background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
+  color: var(--ink);
+}
+
+.pixel-badge--accent {
+  background: linear-gradient(180deg, var(--accent2) 0%, var(--accent) 100%);
+  color: var(--panel0);
+}
+
+/* ---- Progress bar ---- */
+.pixel-progress {
+  height: 1.25rem;
+  background: var(--panel2);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  border: 2px solid var(--frame-border);
+}
+
+.pixel-progress__fill {
+  height: 100%;
+  background: linear-gradient(180deg, var(--accent2) 0%, var(--accent) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: width 0.5s ease-out;
+}
+
+/* ---- Buttons (base; see PixelButton for primary/secondary) ---- */
 .pixel-button {
   display: inline-block;
   padding: 0.5rem 1rem;
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--pixel-text);
-  background: linear-gradient(180deg, var(--pixel-panel) 0%, var(--pixel-panel-dark) 100%);
-  border: 2px solid var(--pixel-border);
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--panel0) 0%, var(--panel1) 100%);
+  border: 2px solid var(--frame-border);
   box-shadow:
-    inset 0 1px 0 var(--pixel-highlight),
-    2px 2px 0 var(--pixel-border-dark);
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 2px 0 var(--frame-shadow);
   cursor: pointer;
-  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  text-decoration: none;
 }
 
 .pixel-button:hover {
-  background: linear-gradient(180deg, var(--pixel-highlight) 0%, var(--pixel-panel) 100%);
+  background: linear-gradient(180deg, var(--panel0) 0%, var(--panel2) 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    2px 2px 0 var(--pixel-border-dark);
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 2px 0 var(--frame-shadow);
+  transform: translateY(-1px);
 }
 
 .pixel-button:active {
-  transform: translate(1px, 1px);
-  box-shadow: inset 0 0 0 2px var(--pixel-border-dark);
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .pixel-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
-/* Badge / small label */
-.pixel-badge {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: var(--pixel-border-dark);
-  color: var(--pixel-highlight);
-  box-shadow: inset 0 0 0 1px var(--pixel-border), 1px 1px 0 var(--pixel-text);
+.pixel-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-/* Card – inventory / parchment item */
-.pixel-card {
-  background: linear-gradient(180deg, #f0e0c8 0%, #e0d0b0 100%);
-  color: var(--pixel-text);
-  padding: 1rem;
+/* Primary (teal) */
+.pixel-button--primary {
+  background: linear-gradient(180deg, var(--accent2) 0%, var(--accent) 100%);
+  color: var(--panel0);
+  border-color: #064d43;
   box-shadow:
-    inset 0 0 0 2px var(--pixel-border),
-    inset 0 2px 2px rgba(255, 255, 255, 0.4),
-    2px 2px 0 var(--pixel-border-dark);
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 2px 0 #064d43;
 }
 
-.pixel-card.selected,
+.pixel-button--primary:hover {
+  background: linear-gradient(180deg, #0e9a85 0%, var(--accent2) 100%);
+}
+
+/* ---- Animations ---- */
+@keyframes pixelBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes pixelShimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pixelSparkle {
+  0%, 100% { opacity: 1; filter: brightness(1); }
+  50% { opacity: 0.95; filter: brightness(1.15); }
+}
+
+@keyframes pixelFill {
+  from { width: 0; }
+}
+
+.pixel-card--sparkle {
+  animation: pixelSparkle 2s ease-in-out infinite;
+}
+
 .pixel-card:hover {
-  background: linear-gradient(180deg, var(--pixel-highlight) 0%, #e8dcc4 100%);
-  box-shadow:
-    inset 0 0 0 3px var(--pixel-accent-bright),
-    inset 0 2px 2px rgba(255, 255, 255, 0.5),
-    2px 2px 0 var(--pixel-border-dark);
+  animation: none;
 }
 
-/* Divider */
-.pixel-divider {
-  height: 2px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--pixel-border),
-    var(--pixel-border) 4px,
-    var(--pixel-border-dark) 4px,
-    var(--pixel-border-dark) 8px
-  );
-  border: none;
-  margin: 0.75rem 0;
+.pixel-progress__fill--animated {
+  animation: pixelFill 0.6s ease-out;
 }
