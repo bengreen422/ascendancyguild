@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { PixelLayout } from "@/components/PixelLayout";
+import { PixelButton } from "@/components/PixelButton";
 
 const GOAL_OPTIONS = [
   "Fitness",
@@ -138,121 +140,131 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="max-w-lg mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold">Welcome to Ascendancy Guild</h1>
-      <p className="mt-2 text-gray-600">
+    <PixelLayout title="Onboarding">
+      <h2 className="pixel-title wood-title text-xl mb-2" style={{ color: "var(--ink)" }}>
+        Welcome to Ascendancy Guild
+      </h2>
+      <p className="text-sm pixel-subtitle mb-6" style={{ color: "var(--muted)" }}>
         A few questions so we can tailor your quest scroll.
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-8">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Goals (pick up to 2)
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {GOAL_OPTIONS.map((g) => (
-              <button
-                key={g}
-                type="button"
-                onClick={() => toggleGoal(g)}
-                className={`px-3 py-2 rounded-lg border text-sm ${
-                  goals.includes(g)
-                    ? "bg-indigo-100 border-indigo-500 text-indigo-800"
-                    : "bg-white border-gray-300 text-gray-700 hover:border-gray-400"
-                }`}
-              >
-                {g}
-              </button>
-            ))}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="wood-frame-secondary wood-frame p-4">
+          <div className="parchment-panel">
+            <label className="block text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
+              Goals (pick up to 2)
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {GOAL_OPTIONS.map((g) => (
+                <PixelButton
+                  key={g}
+                  type="button"
+                  variant="secondary"
+                  onClick={() => toggleGoal(g)}
+                  className={goals.includes(g) ? "ring-2 ring-[var(--accent-blue)]" : ""}
+                >
+                  {g}
+                </PixelButton>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Gym access
-          </label>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="gym"
-                checked={constraints.gym_access === true}
-                onChange={() =>
-                  setConstraints((c) => ({ ...c, gym_access: true }))
-                }
-              />
-              Yes
+        <div className="wood-frame-secondary wood-frame p-4">
+          <div className="parchment-panel">
+            <label className="block text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
+              Gym access
             </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="gym"
-                checked={constraints.gym_access === false}
-                onChange={() =>
-                  setConstraints((c) => ({ ...c, gym_access: false }))
-                }
-              />
-              No
-            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer" style={{ color: "var(--ink)" }}>
+                <input
+                  type="radio"
+                  name="gym"
+                  checked={constraints.gym_access === true}
+                  onChange={() =>
+                    setConstraints((c) => ({ ...c, gym_access: true }))
+                  }
+                  style={{ accentColor: "var(--accent-blue)" }}
+                />
+                Yes
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer" style={{ color: "var(--ink)" }}>
+                <input
+                  type="radio"
+                  name="gym"
+                  checked={constraints.gym_access === false}
+                  onChange={() =>
+                    setConstraints((c) => ({ ...c, gym_access: false }))
+                  }
+                  style={{ accentColor: "var(--accent-blue)" }}
+                />
+                No
+              </label>
+            </div>
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Equipment at home
-          </label>
-          <select
-            value={constraints.equipment}
-            onChange={(e) =>
-              setConstraints((c) => ({
-                ...c,
-                equipment: e.target.value as Constraints["equipment"],
-              }))
-            }
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-          >
-            {EQUIPMENT_OPTIONS.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt.charAt(0).toUpperCase() + opt.slice(1)}
-              </option>
-            ))}
-          </select>
+        <div className="wood-frame-secondary wood-frame p-4">
+          <div className="parchment-panel">
+            <label className="block text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
+              Equipment at home
+            </label>
+            <select
+              value={constraints.equipment}
+              onChange={(e) =>
+                setConstraints((c) => ({
+                  ...c,
+                  equipment: e.target.value as Constraints["equipment"],
+                }))
+              }
+              className="w-full px-3 py-2 text-sm border-2 border-[var(--wood-dark)] bg-[var(--parchment)]"
+              style={{ color: "var(--ink)" }}
+            >
+              {EQUIPMENT_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt.charAt(0).toUpperCase() + opt.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Tone: gentle (0) → intense (100)
-          </label>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={tone}
-            onChange={(e) => setTone(Number(e.target.value))}
-            className="w-full"
-          />
-          <span className="text-sm text-gray-500">{tone}</span>
+        <div className="wood-frame-secondary wood-frame p-4">
+          <div className="parchment-panel">
+            <label className="block text-sm font-semibold mb-2" style={{ color: "var(--ink)" }}>
+              Tone: gentle (0) → intense (100)
+            </label>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={tone}
+              onChange={(e) => setTone(Number(e.target.value))}
+              className="w-full accent-[var(--accent-gold)]"
+            />
+            <span className="text-sm font-semibold ml-2" style={{ color: "var(--ink)" }}>{tone}</span>
+          </div>
         </div>
 
-        <p className="text-sm text-gray-500">
-          Default time: {constraints.time_default} min, max:{" "}
-          {constraints.time_max} min. No-cost quests only.
+        <p className="text-sm pixel-subtitle" style={{ color: "var(--muted)" }}>
+          Default time: {constraints.time_default} min, max: {constraints.time_max} min. No-cost quests only.
         </p>
 
         {error && (
-          <p className="text-sm text-red-600" role="alert">
+          <p className="text-sm" style={{ color: "var(--danger)" }} role="alert">
             {error}
           </p>
         )}
 
-        <button
+        <PixelButton
           type="submit"
           disabled={loading}
-          className="w-full py-3 px-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+          variant="primary"
+          className="w-full py-3"
         >
           {loading ? "Saving…" : "Continue"}
-        </button>
+        </PixelButton>
       </form>
-    </main>
+    </PixelLayout>
   );
 }

@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { PixelLayout } from "@/components/PixelLayout";
 import { PixelCard } from "@/components/PixelCard";
 import { PixelButton } from "@/components/PixelButton";
+import { QuestDetailModal } from "@/components/QuestDetailModal";
 
 const TIME_OPTIONS = [10, 20, 40, 60] as const;
 const ENERGY_OPTIONS = [
@@ -34,6 +35,7 @@ type DailyQuest = {
   completion_type: string;
   metric_name: string | null;
   target_value: number | null;
+  tags?: string[];
 };
 
 type QuestLog = {
@@ -62,6 +64,7 @@ export default function DailyPage() {
   const [loadingScroll, setLoadingScroll] = useState(false);
   const [logSubmitting, setLogSubmitting] = useState<string | null>(null);
   const [measurableValues, setMeasurableValues] = useState<Record<string, string>>({});
+  const [detailQuestId, setDetailQuestId] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     const {
@@ -112,7 +115,7 @@ export default function DailyPage() {
       if (set) {
         const { data: questRows } = await supabase
           .from("daily_quests")
-          .select("id, category, title, description, est_minutes, completion_type, metric_name, target_value")
+          .select("id, category, title, description, est_minutes, completion_type, metric_name, target_value, tags")
           .eq("quest_set_id", set.id)
           .order("created_at");
         setQuests((questRows ?? []) as DailyQuest[]);
@@ -366,9 +369,29 @@ export default function DailyPage() {
       )
     : 0;
   const totalPlannedMinutes = quests.reduce((s, q) => s + q.est_minutes, 0);
+  const detailQuestFound = detailQuestId
+    ? quests.find((q) => q.id === detailQuestId)
+    : undefined;
+  const detailQuest = detailQuestFound ?? null;
+  const detailLog = detailQuest ? logs.find((l) => l.daily_quest_id === detailQuest.id) : null;
+  const detailPct = detailLog?.completion_percent ?? 0;
 
   return (
     <PixelLayout title="Quest Scroll">
+      <QuestDetailModal
+        open={!!detailQuest}
+        onClose={() => setDetailQuestId(null)}
+        quest={detailQuest}
+        completionPercent={detailPct}
+        measurableValue={detailQuest ? (measurableValues[detailQuest.id] ?? "") : ""}
+        onMeasurableChange={(value) =>
+          detailQuest &&
+          setMeasurableValues((prev) => ({ ...prev, [detailQuest.id]: value }))
+        }
+        onMarkDone={(markDone) => detailQuest && logQuest(detailQuest.id, markDone)}
+        onSaveMeasurable={(value) => detailQuest && logQuest(detailQuest.id, undefined, value)}
+        logSubmitting={detailQuest ? logSubmitting === detailQuest.id : false}
+      />
       <div className="wood-frame-secondary wood-frame p-4">
         <div className="parchment-panel">
         <h2 className="pixel-title wood-title text-xl" style={{ color: "var(--ink)" }}>
@@ -427,6 +450,17 @@ export default function DailyPage() {
                         </p>
                         <p className="mt-1 text-sm pixel-subtitle">{q.description}</p>
                         <div className="mt-3 flex items-center gap-2 flex-wrap">
+                          <PixelButton
+                            type="button"
+                            variant="secondary"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDetailQuestId(q.id);
+                            }}
+                            className="text-sm"
+                          >
+                            Details
+                          </PixelButton>
                           {isBinary ? (
                             <PixelButton
                               variant={pct >= 100 ? "secondary" : "primary"}
