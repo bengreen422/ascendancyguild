@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" fill="#2c1810"/>
+  <!-- silhouette: hat + robe + book -->
+  <g fill="#8b6914" stroke="#5c4610" stroke-width="1">
+    <path d="M8 24 L32 8 L56 24 L52 28 L12 28 Z"/>
+    <rect x="24" y="28" width="16" height="28" rx="1"/>
+    <rect x="40" y="36" width="14" height="18" rx="1"/>
+    <rect x="42" y="40" width="2" height="10"/>
+  </g>
+</svg>

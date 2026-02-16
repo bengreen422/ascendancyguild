@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { PixelLayout } from "@/components/PixelLayout";
+
+const HIDDEN_ATTR_KEYS = ["xp_snapshot_date", "xp_snapshot_value", "streak_counted_date"];
 
 type Summary = {
   profile: { class_selected: string | null; goals: unknown; tone: number };
@@ -93,33 +96,19 @@ export default function ProfilePage() {
     run();
   }, [router]);
 
-  const header = (
-    <header className="flex justify-between items-center pb-4 mb-6 border-b border-gray-200">
-      <h1 className="text-xl font-bold text-gray-800">Character Sheet</h1>
-      <Link
-        href="/daily"
-        className="px-3 py-2 text-sm font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded-lg hover:bg-indigo-50"
-      >
-        Back to Daily
-      </Link>
-    </header>
-  );
-
   if (loading) {
     return (
-      <main className="max-w-lg mx-auto px-4 py-10">
-        {header}
-        <p className="text-gray-500">Loading…</p>
-      </main>
+      <PixelLayout title="Character Sheet" navLabel="Back to Daily" navHref="/daily">
+        <p className="text-[var(--pixel-text-muted)]">Loading…</p>
+      </PixelLayout>
     );
   }
 
   if (error || !summary) {
     return (
-      <main className="max-w-lg mx-auto px-4 py-10">
-        {header}
+      <PixelLayout title="Character Sheet" navLabel="Back to Daily" navHref="/daily">
         <p className="text-red-600">{error ?? "Not found"}</p>
-      </main>
+      </PixelLayout>
     );
   }
 
@@ -129,52 +118,73 @@ export default function ProfilePage() {
       ? Math.min(100, (level.xp_into_level / level.xp_needed_for_next_level) * 100)
       : 100;
 
-  return (
-    <main className="max-w-lg mx-auto px-4 py-10">
-      {header}
-      <h2 className="text-2xl font-bold">Profile</h2>
+  const displayAttrs = Object.entries(progress.attributes).filter(
+    ([k]) => !HIDDEN_ATTR_KEYS.includes(k)
+  );
 
-      <div className="mt-6 flex items-baseline gap-2">
-        <span className="font-semibold text-gray-800">
-          {profile.class_selected ?? "—"}
-        </span>
-        <span className="text-gray-500">Level {level.level}</span>
+  const classId = profile.class_selected ?? "";
+
+  return (
+    <PixelLayout title="Character Sheet" navLabel="Back to Daily" navHref="/daily">
+      <div className="pixel-panel pixel-border p-4 flex items-center gap-4 mb-6">
+        {classId && (
+          <div className="flex-shrink-0 w-16 h-16 relative">
+            <Image
+              src={`/characters/${classId.toLowerCase()}.svg`}
+              alt={classId}
+              width={64}
+              height={64}
+              className="object-contain"
+            />
+          </div>
+        )}
+        <div>
+          <h2 className="pixel-title text-xl">
+            {profile.class_selected ?? "—"} · Level {level.level}
+          </h2>
+        </div>
       </div>
 
-      <div className="mt-4">
-        <div className="flex justify-between text-sm text-gray-600 mb-1">
+      <div className="pixel-panel pixel-border p-4 mt-6">
+        <div className="flex justify-between text-sm text-[var(--pixel-text-muted)] mb-1">
           <span>XP</span>
           <span>
             {level.xp_into_level} / {level.xp_needed_for_next_level || "—"}
           </span>
         </div>
-        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className="h-4 overflow-hidden pixel-border"
+          style={{ background: "var(--pixel-panel-dark)" }}
+        >
           <div
-            className="h-full bg-indigo-600 rounded-full transition-all"
-            style={{ width: `${xpPct}%` }}
+            className="h-full transition-all"
+            style={{
+              width: `${xpPct}%`,
+              background: "var(--pixel-accent-bright)",
+            }}
           />
         </div>
       </div>
 
-      <div className="mt-6 flex gap-6">
-        <div>
-          <p className="text-xs text-gray-500">Current streak</p>
-          <p className="text-lg font-semibold">{progress.streak_current}</p>
+      <div className="mt-6 flex gap-4">
+        <div className="pixel-badge px-4 py-2">
+          <p className="text-xs opacity-90">Current streak</p>
+          <p className="text-lg font-bold">{progress.streak_current}</p>
         </div>
-        <div>
-          <p className="text-xs text-gray-500">Best streak</p>
-          <p className="text-lg font-semibold">{progress.streak_best}</p>
+        <div className="pixel-badge px-4 py-2">
+          <p className="text-xs opacity-90">Best streak</p>
+          <p className="text-lg font-bold">{progress.streak_best}</p>
         </div>
       </div>
 
-      {Object.keys(progress.attributes).length > 0 && (
-        <div className="mt-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Attributes</h2>
-          <ul className="space-y-1">
-            {Object.entries(progress.attributes).map(([key, value]) => (
+      {displayAttrs.length > 0 && (
+        <div className="mt-6 pixel-panel pixel-border p-4">
+          <h2 className="pixel-title text-lg mb-3">Attributes</h2>
+          <ul className="space-y-2">
+            {displayAttrs.map(([key, value]) => (
               <li key={key} className="flex justify-between text-sm">
-                <span className="text-gray-700">{key}</span>
-                <span className="font-medium">{String(value)}</span>
+                <span className="text-[var(--pixel-text)]">{key}</span>
+                <span className="font-semibold">{String(value)}</span>
               </li>
             ))}
           </ul>
@@ -182,18 +192,18 @@ export default function ProfilePage() {
       )}
 
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">Completed today</h2>
+        <h2 className="pixel-title text-lg mb-2">Completed today</h2>
         {recent.today.length === 0 ? (
-          <p className="text-sm text-gray-500">No quests completed today yet.</p>
+          <p className="text-sm text-[var(--pixel-text-muted)]">No quests completed today yet.</p>
         ) : (
           <ul className="space-y-2">
             {recent.today.map((q, i) => (
               <li
                 key={i}
-                className="flex justify-between items-center py-2 border-b border-gray-100"
+                className="pixel-card flex justify-between items-center py-2 px-3"
               >
                 <span className="font-medium">{q.title}</span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-[var(--pixel-text-muted)]">
                   {q.category} · {q.completion_percent}%
                 </span>
               </li>
@@ -203,25 +213,26 @@ export default function ProfilePage() {
       </div>
 
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">Last 7 days</h2>
+        <h2 className="pixel-title text-lg mb-2">Last 7 days</h2>
         {recent.last7days.length === 0 ? (
-          <p className="text-sm text-gray-500">No recent activity.</p>
+          <p className="text-sm text-[var(--pixel-text-muted)]">No recent activity.</p>
         ) : (
           <ul className="space-y-4">
             {recent.last7days.map((day) => (
-              <li key={day.date}>
-                <p className="text-sm font-medium text-gray-600 mb-2">{day.date}</p>
+              <li key={day.date} className="pixel-panel pixel-border p-3">
+                <p className="text-sm font-semibold text-[var(--pixel-text-muted)] mb-2">
+                  {day.date}
+                </p>
                 <ul className="space-y-1 pl-2">
                   {day.quests.length === 0 ? (
-                    <li className="text-sm text-gray-400">No quests logged</li>
+                    <li className="text-sm text-[var(--pixel-text-muted)]">No quests logged</li>
                   ) : (
                     day.quests.map((q, i) => (
-                      <li
-                        key={i}
-                        className="flex justify-between text-sm py-1"
-                      >
+                      <li key={i} className="flex justify-between text-sm py-1">
                         <span>{q.title}</span>
-                        <span className="text-gray-500">{q.completion_percent}%</span>
+                        <span className="text-[var(--pixel-text-muted)]">
+                          {q.completion_percent}%
+                        </span>
                       </li>
                     ))
                   )}
@@ -231,6 +242,6 @@ export default function ProfilePage() {
           </ul>
         )}
       </div>
-    </main>
+    </PixelLayout>
   );
 }

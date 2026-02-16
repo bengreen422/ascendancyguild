@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { PixelLayout } from "@/components/PixelLayout";
 
 const TIME_OPTIONS = [10, 20, 40, 60] as const;
 const ENERGY_OPTIONS = [
@@ -250,113 +250,96 @@ export default function DailyPage() {
     );
   }
 
-  const header = (
-    <header className="flex justify-between items-center pb-4 mb-6 border-b border-gray-200">
-      <h1 className="text-xl font-bold text-gray-800">Daily Quest Scroll</h1>
-      <Link
-        href="/profile"
-        className="px-3 py-2 text-sm font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 rounded-lg hover:bg-indigo-50"
-      >
-        View Profile
-      </Link>
-    </header>
-  );
-
   if (!ready) {
     return (
-      <main className="max-w-lg mx-auto px-4 py-10">
-        {header}
-        <p className="text-gray-500">Loading…</p>
-      </main>
+      <PixelLayout title="Daily Quest Scroll" navLabel="View Profile" navHref="/profile">
+        <p className="text-[var(--pixel-text-muted)]">Loading…</p>
+      </PixelLayout>
     );
   }
 
   if (!checkin) {
     return (
-      <main className="max-w-lg mx-auto px-4 py-10">
-        {header}
-        <h2 className="text-2xl font-bold">Daily Check-in</h2>
-        <p className="mt-2 text-gray-600">Quick answers so we can build your scroll.</p>
+      <PixelLayout title="Daily Quest Scroll" navLabel="View Profile" navHref="/profile">
+        <div className="pixel-panel pixel-border p-4 mt-4">
+          <h2 className="pixel-title text-xl">Daily Check-in</h2>
+          <p className="mt-2 text-sm text-[var(--pixel-text-muted)]">
+            Quick answers so we can build your scroll.
+          </p>
 
-        <form onSubmit={submitCheckin} className="mt-8 space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Time available (minutes)
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {TIME_OPTIONS.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setTimeAvailable(t)}
-                  className={`px-3 py-2 rounded-lg border text-sm ${
-                    timeAvailable === t
-                      ? "bg-indigo-100 border-indigo-500 text-indigo-800"
-                      : "border-gray-300 text-gray-700"
-                  }`}
-                >
-                  {t}
-                </button>
-              ))}
+          <form onSubmit={submitCheckin} className="mt-6 space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-[var(--pixel-text)] mb-2">
+                Time available (minutes)
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {TIME_OPTIONS.map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setTimeAvailable(t)}
+                    className={`pixel-button ${timeAvailable === t ? "ring-2 ring-[var(--pixel-accent-bright)]" : ""}`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Energy level
-            </label>
-            <div className="flex gap-4">
-              {ENERGY_OPTIONS.map(({ value, label }) => (
-                <label key={value} className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="energy"
-                    checked={energy === value}
-                    onChange={() => setEnergy(value)}
-                  />
-                  {label}
-                </label>
-              ))}
+            <div>
+              <label className="block text-sm font-semibold text-[var(--pixel-text)] mb-2">
+                Energy level
+              </label>
+              <div className="flex gap-4">
+                {ENERGY_OPTIONS.map(({ value, label }) => (
+                  <label key={value} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="energy"
+                      checked={energy === value}
+                      onChange={() => setEnergy(value)}
+                      className="accent-[var(--pixel-accent)]"
+                    />
+                    <span className="text-[var(--pixel-text)]">{label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Avoid today (optional)
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {AVOID_TAG_OPTIONS.map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => toggleAvoid(tag)}
-                  className={`px-3 py-2 rounded-lg border text-sm ${
-                    avoidTags.includes(tag)
-                      ? "bg-amber-100 border-amber-500"
-                      : "border-gray-300 text-gray-700"
-                  }`}
-                >
-                  {tag.replace(/_/g, " ")}
-                </button>
-              ))}
+            <div>
+              <label className="block text-sm font-semibold text-[var(--pixel-text)] mb-2">
+                Avoid today (optional)
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {AVOID_TAG_OPTIONS.map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => toggleAvoid(tag)}
+                    className={`pixel-button ${avoidTags.includes(tag) ? "ring-2 ring-amber-600" : ""}`}
+                  >
+                    {tag.replace(/_/g, " ")}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {checkinError && (
-            <p className="text-sm text-red-600" role="alert">
-              {checkinError}
-            </p>
-          )}
+            {checkinError && (
+              <p className="text-sm text-red-600" role="alert">
+                {checkinError}
+              </p>
+            )}
 
-          <button
-            type="submit"
-            disabled={checkinSubmitting || loadingScroll}
-            className="w-full py-3 px-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50"
-          >
-            {checkinSubmitting || loadingScroll ? "Building your scroll…" : "Continue"}
-          </button>
-        </form>
-      </main>
+            <button
+              type="submit"
+              disabled={checkinSubmitting || loadingScroll}
+              className="w-full pixel-button py-3"
+            >
+              {checkinSubmitting || loadingScroll ? "Building your scroll…" : "Continue"}
+            </button>
+          </form>
+        </div>
+      </PixelLayout>
     );
   }
 
@@ -375,29 +358,30 @@ export default function DailyPage() {
     : 0;
 
   return (
-    <main className="max-w-lg mx-auto px-4 py-10">
-      {header}
-      <h2 className="text-2xl font-bold">Your Quest Scroll</h2>
-      <p className="mt-2 text-gray-600">
-        Today&apos;s quests. Mark done or log progress as you go.
-      </p>
+    <PixelLayout title="Daily Quest Scroll" navLabel="View Profile" navHref="/profile">
+      <div className="pixel-panel pixel-border p-4 mt-4">
+        <h2 className="pixel-title text-xl">Your Quest Scroll</h2>
+        <p className="mt-2 text-sm text-[var(--pixel-text-muted)]">
+          Today&apos;s quests. Mark done or log progress as you go.
+        </p>
 
-      {progress != null && (
-        <div className="mt-4 p-3 bg-gray-100 rounded-lg text-sm flex gap-4">
-          <span>XP: {progress.xp_total}</span>
-          <span>Streak: {progress.streak_current}</span>
-          <span>Best: {progress.streak_best}</span>
-          <span>Today: {totalPercent}%</span>
-        </div>
-      )}
+        {progress != null && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span className="pixel-badge">XP: {progress.xp_total}</span>
+            <span className="pixel-badge">Streak: {progress.streak_current}</span>
+            <span className="pixel-badge">Best: {progress.streak_best}</span>
+            <span className="pixel-badge">Today: {totalPercent}%</span>
+          </div>
+        )}
 
-      {loadingScroll && quests.length === 0 && (
-        <p className="mt-4 text-gray-500">Generating your scroll…</p>
-      )}
+        {loadingScroll && quests.length === 0 && (
+          <p className="mt-4 text-[var(--pixel-text-muted)]">Generating your scroll…</p>
+        )}
 
-      {quests.length === 0 && !loadingScroll && checkin && (
-        <p className="mt-4 text-gray-500">No quests yet. Complete check-in first.</p>
-      )}
+        {quests.length === 0 && !loadingScroll && checkin && (
+          <p className="mt-4 text-[var(--pixel-text-muted)]">No quests yet. Complete check-in first.</p>
+        )}
+      </div>
 
       <div className="mt-6 space-y-8">
         {(["Body", "Mind", "Sustenance"] as const).map((cat) => {
@@ -405,31 +389,24 @@ export default function DailyPage() {
           if (!list.length) return null;
           return (
             <div key={cat}>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">{cat}</h2>
+              <h2 className="pixel-title text-lg mb-3">{cat}</h2>
               <ul className="space-y-4">
                 {list.map((q) => {
                   const log = logs.find((l) => l.daily_quest_id === q.id);
                   const pct = log?.completion_percent ?? 0;
                   const isBinary = q.completion_type === "binary";
                   return (
-                    <li
-                      key={q.id}
-                      className="p-4 border border-gray-200 rounded-lg bg-white"
-                    >
-                      <p className="font-medium">{q.title}</p>
-                      <p className="mt-1 text-sm text-gray-600">{q.description}</p>
-                      <p className="mt-1 text-xs text-gray-500">~{q.est_minutes} min</p>
+                    <li key={q.id} className="pixel-card p-4">
+                      <p className="font-semibold text-[var(--pixel-text)]">{q.title}</p>
+                      <p className="mt-1 text-sm text-[var(--pixel-text-muted)]">{q.description}</p>
+                      <p className="mt-1 text-xs text-[var(--pixel-text-muted)]">~{q.est_minutes} min</p>
                       <div className="mt-3 flex items-center gap-2 flex-wrap">
                         {isBinary ? (
                           <button
                             type="button"
                             onClick={() => logQuest(q.id, pct >= 100 ? false : true)}
                             disabled={logSubmitting === q.id}
-                            className={`px-3 py-1.5 rounded text-sm font-medium ${
-                              pct >= 100
-                                ? "bg-green-100 text-green-800"
-                                : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
-                            }`}
+                            className={`pixel-button text-sm ${pct >= 100 ? "opacity-80" : ""}`}
                           >
                             {pct >= 100 ? "Done" : "Mark Done"}
                           </button>
@@ -447,7 +424,7 @@ export default function DailyPage() {
                                   [q.id]: e.target.value,
                                 }))
                               }
-                              className="w-24 px-2 py-1.5 border border-gray-300 rounded text-sm"
+                              className="w-24 px-2 py-1.5 pixel-border bg-[var(--pixel-panel)] text-[var(--pixel-text)] text-sm"
                             />
                             <button
                               type="button"
@@ -456,13 +433,15 @@ export default function DailyPage() {
                                 if (!Number.isNaN(v)) logQuest(q.id, undefined, v);
                               }}
                               disabled={logSubmitting === q.id}
-                              className="px-3 py-1.5 rounded text-sm font-medium bg-indigo-100 text-indigo-800"
+                              className="pixel-button text-sm"
                             >
                               Save
                             </button>
                           </>
                         )}
-                        {pct > 0 && <span className="text-xs text-gray-500">{pct}%</span>}
+                        {pct > 0 && (
+                          <span className="text-xs text-[var(--pixel-text-muted)]">{pct}%</span>
+                        )}
                       </div>
                     </li>
                   );
@@ -472,6 +451,6 @@ export default function DailyPage() {
           );
         })}
       </div>
-    </main>
+    </PixelLayout>
   );
 }

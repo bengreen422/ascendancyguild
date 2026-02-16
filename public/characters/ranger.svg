@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" fill="#2c1810"/>
+  <!-- silhouette: bow + figure -->
+  <g fill="#8b6914" stroke="#5c4610" stroke-width="1">
+    <path d="M8 32 Q32 8 56 32 Q32 56 8 32" fill="none" stroke-width="3"/>
+    <rect x="28" y="20" width="8" height="24"/>
+    <rect x="24" y="44" width="16" height="4"/>
+    <rect x="26" y="12" width="12" height="10" rx="1"/>
+  </g>
+</svg>

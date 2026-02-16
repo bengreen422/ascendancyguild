@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { PixelLayout } from "@/components/PixelLayout";
 
 const CLASSES = [
   {
@@ -122,14 +124,13 @@ export default function CharacterPage() {
   }
 
   return (
-    <main className="max-w-lg mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold">Choose your class</h1>
-      <p className="mt-2 text-gray-600">
+    <PixelLayout title="Choose Your Class" navLabel="To Daily" navHref="/daily">
+      <p className="mt-2 text-[var(--pixel-text-muted)]">
         This shapes the tone of your daily quest scroll. You can change it later.
       </p>
 
       {reasoning && (
-        <div className="mt-4 p-3 bg-indigo-50 rounded-lg text-sm text-indigo-900">
+        <div className="mt-4 pixel-panel pixel-border p-3 text-sm text-[var(--pixel-text)]">
           {reasoning}
         </div>
       )}
@@ -140,17 +141,26 @@ export default function CharacterPage() {
             key={c.id}
             type="button"
             onClick={() => setSelected(c.id)}
-            className={`w-full text-left p-4 rounded-lg border-2 transition-colors ${
-              selected === c.id
-                ? "border-indigo-500 bg-indigo-50"
-                : "border-gray-200 hover:border-gray-300"
+            className={`w-full text-left pixel-card flex gap-4 items-start transition-all ${
+              selected === c.id ? "selected" : ""
             }`}
           >
-            <span className="font-semibold">{c.id}</span>
-            {recommended === c.id && (
-              <span className="ml-2 text-xs text-indigo-600">Recommended</span>
-            )}
-            <p className="mt-1 text-sm text-gray-600">{c.description}</p>
+            <div className="flex-shrink-0 w-16 h-16 relative">
+              <Image
+                src={`/characters/${c.id.toLowerCase()}.svg`}
+                alt={c.id}
+                width={64}
+                height={64}
+                className="object-contain"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <span className="font-semibold text-[var(--pixel-text)]">{c.id}</span>
+              {recommended === c.id && (
+                <span className="ml-2 pixel-badge">Recommended</span>
+              )}
+              <p className="mt-1 text-sm text-[var(--pixel-text-muted)]">{c.description}</p>
+            </div>
           </button>
         ))}
       </div>
@@ -164,10 +174,10 @@ export default function CharacterPage() {
       <button
         onClick={handleConfirm}
         disabled={loading}
-        className="mt-8 w-full py-3 px-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+        className="mt-8 w-full pixel-button py-3"
       >
         {loading ? "Saving…" : "Confirm and continue"}
       </button>
-    </main>
+    </PixelLayout>
   );
 }
