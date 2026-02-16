@@ -1,41 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function DashboardPage() {
-  const [email, setEmail] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setEmail(data.user?.email ?? null);
+    supabase.auth.getUser().then(({ data, error }) => {
+      if (error || !data.user) {
+        router.replace("/login");
+        return;
+      }
+      router.replace("/instructions");
     });
-  }, []);
-
-  async function signOut() {
-    await supabase.auth.signOut();
-    window.location.href = "/login";
-  }
+  }, [router]);
 
   return (
-    <main style={{ maxWidth: 720, margin: "40px auto", padding: 16 }}>
-      <h1 style={{ fontSize: 28, fontWeight: 700 }}>Dashboard</h1>
-      <p style={{ marginTop: 8 }}>
-        Logged in as: <b>{email ?? "…"}</b>
-      </p>
-
-      <button
-        onClick={signOut}
-        style={{
-          marginTop: 16,
-          padding: 12,
-          borderRadius: 8,
-          border: "1px solid #ccc",
-          cursor: "pointer",
-        }}
-      >
-        Sign out
-      </button>
+    <main className="max-w-lg mx-auto px-4 py-6 min-h-screen flex items-center justify-center" style={{ background: "var(--bg-sky0, #87ceeb)" }}>
+      <p className="pixel-subtitle text-sm" style={{ color: "var(--ink, #1a1a3e)" }}>Taking you to the guild…</p>
     </main>
   );
 }

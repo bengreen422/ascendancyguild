@@ -24,8 +24,8 @@ export function PixelButton({
   href,
   className = "",
 }: PixelButtonProps) {
-  const baseClass = "pixel-button";
-  const variantClass = variant === "primary" ? "pixel-button--primary" : "";
+  const baseClass = "wood-button pixel-button snes-button";
+  const variantClass = variant === "primary" ? "wood-button--primary pixel-button--primary snes-button--primary" : "";
   const classes = [baseClass, variantClass, className].filter(Boolean).join(" ");
 
   if (href) {

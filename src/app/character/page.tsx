@@ -132,8 +132,10 @@ export default function CharacterPage() {
       </p>
 
       {reasoning && (
-        <div className="mt-4 pixel-panel p-3 text-sm" style={{ color: "var(--ink)" }}>
-          {reasoning}
+        <div className="mt-4 wood-frame-secondary wood-frame p-3">
+          <div className="parchment-panel text-sm" style={{ color: "var(--ink)" }}>
+            {reasoning}
+          </div>
         </div>
       )}
 
@@ -146,31 +148,35 @@ export default function CharacterPage() {
             selected={selected === c.id}
             sparkle={recommended === c.id}
             onClick={() => setSelected(c.id)}
-            className="w-full text-left flex gap-4 items-start"
+            className="w-full text-left"
           >
-            <div
-              className="flex-shrink-0 w-24 h-24 relative"
-              style={{ imageRendering: "pixelated" }}
-            >
-              <Image
-                src={`/characters/${c.id.toLowerCase()}.svg`}
-                alt={c.id}
-                width={96}
-                height={96}
-                className="object-contain"
+            <div className="flex gap-4 items-start">
+              <div
+                className="flex-shrink-0 w-24 h-24 relative sprite-idle flex items-center justify-center"
                 style={{ imageRendering: "pixelated" }}
-              />
-            </div>
-            <div className="min-w-0 flex-1">
-              <span className="pixel-title font-semibold" style={{ color: "var(--ink)" }}>
-                {c.id}
-              </span>
-              {recommended === c.id && (
-                <span className="ml-2 pixel-badge pixel-badge--gold">Recommended</span>
-              )}
-              <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-                {c.description}
-              </p>
+              >
+                <Image
+                  src={`/characters/${c.id.toLowerCase()}.svg`}
+                  alt={c.id}
+                  width={96}
+                  height={96}
+                  className="object-contain"
+                  style={{ imageRendering: "pixelated" }}
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="pixel-title font-semibold" style={{ color: "var(--ink)" }}>
+                    {c.id}
+                  </span>
+                  {recommended === c.id && (
+                    <span className="pixel-badge pixel-badge--gold wood-badge">Recommended</span>
+                  )}
+                </div>
+                <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
+                  {c.description}
+                </p>
+              </div>
             </div>
           </PixelCard>
         ))}

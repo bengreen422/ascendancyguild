@@ -263,8 +263,9 @@ export default function DailyPage() {
   if (!checkin) {
     return (
       <PixelLayout title="Quest Scroll">
-        <div className="pixel-panel p-4">
-          <h2 className="pixel-title text-xl" style={{ color: "var(--ink)" }}>
+      <div className="wood-frame-secondary wood-frame p-4">
+        <div className="parchment-panel">
+          <h2 className="pixel-title wood-title text-xl" style={{ color: "var(--ink)" }}>
             Daily Check-in
           </h2>
           <p className="mt-2 text-sm pixel-subtitle">
@@ -283,7 +284,7 @@ export default function DailyPage() {
                     type="button"
                     variant="secondary"
                     onClick={() => setTimeAvailable(t)}
-                    className={timeAvailable === t ? "ring-2 ring-[var(--accent)]" : ""}
+                    className={timeAvailable === t ? "ring-2 ring-[var(--accent-blue)]" : ""}
                   >
                     {t}
                   </PixelButton>
@@ -303,7 +304,7 @@ export default function DailyPage() {
                       name="energy"
                       checked={energy === value}
                       onChange={() => setEnergy(value)}
-                      style={{ accentColor: "var(--accent)" }}
+                      style={{ accentColor: "var(--accent-blue)" }}
                     />
                     <span style={{ color: "var(--ink)" }}>{label}</span>
                   </label>
@@ -322,7 +323,7 @@ export default function DailyPage() {
                     type="button"
                     variant="secondary"
                     onClick={() => toggleAvoid(tag)}
-                    className={avoidTags.includes(tag) ? "ring-2 ring-[var(--gold)]" : ""}
+                    className={avoidTags.includes(tag) ? "ring-2 ring-[var(--accent-gold)]" : ""}
                   >
                     {tag.replace(/_/g, " ")}
                   </PixelButton>
@@ -345,6 +346,7 @@ export default function DailyPage() {
               {checkinSubmitting || loadingScroll ? "Building your scroll…" : "Continue"}
             </PixelButton>
           </form>
+          </div>
         </div>
       </PixelLayout>
     );
@@ -367,8 +369,9 @@ export default function DailyPage() {
 
   return (
     <PixelLayout title="Quest Scroll">
-      <div className="pixel-panel p-4">
-        <h2 className="pixel-title text-xl" style={{ color: "var(--ink)" }}>
+      <div className="wood-frame-secondary wood-frame p-4">
+        <div className="parchment-panel">
+        <h2 className="pixel-title wood-title text-xl" style={{ color: "var(--ink)" }}>
           Your Quest Scroll
         </h2>
         <p className="mt-2 text-sm pixel-subtitle">
@@ -377,11 +380,11 @@ export default function DailyPage() {
 
         {progress != null && (
           <div className="mt-4 flex flex-wrap gap-2">
-            <span className="pixel-badge pixel-badge--accent">XP: {progress.xp_total}</span>
-            <span className="pixel-badge pixel-badge--accent">Streak: {progress.streak_current}</span>
-            <span className="pixel-badge">Best: {progress.streak_best}</span>
-            <span className="pixel-badge">{totalPlannedMinutes} min planned</span>
-            <span className="pixel-badge pixel-badge--gold">Today: {totalPercent}%</span>
+            <span className="pixel-badge wood-badge pixel-badge--gold">XP: {progress.xp_total}</span>
+            <span className="pixel-badge wood-badge pixel-badge--streak">Streak: {progress.streak_current}</span>
+            <span className="pixel-badge wood-badge pixel-badge--streak">Best: {progress.streak_best}</span>
+            <span className="pixel-badge wood-badge">{totalPlannedMinutes} min planned</span>
+            <span className="pixel-badge wood-badge pixel-badge--gold">Today: {totalPercent}%</span>
           </div>
         )}
 
@@ -392,6 +395,7 @@ export default function DailyPage() {
         {quests.length === 0 && !loadingScroll && checkin && (
           <p className="mt-4 pixel-subtitle">No quests yet. Complete check-in first.</p>
         )}
+        </div>
       </div>
 
       <div className="mt-6 space-y-8">
@@ -400,7 +404,7 @@ export default function DailyPage() {
           if (!list.length) return null;
           return (
             <div key={cat}>
-              <h2 className="pixel-title text-lg mb-3" style={{ color: "var(--ink)" }}>
+              <h2 className="pixel-title wood-title text-lg mb-3" style={{ color: "var(--ink)" }}>
                 {cat}
               </h2>
               <ul className="space-y-4">
@@ -412,10 +416,10 @@ export default function DailyPage() {
                     <li key={q.id}>
                       <PixelCard className="p-4">
                         <div className="flex flex-wrap gap-2 mb-2">
-                          <span className="pixel-badge">{q.category}</span>
-                          <span className="pixel-badge">~{q.est_minutes} min</span>
+                          <span className={`pixel-badge wood-badge text-xs badge-${q.category.toLowerCase()}`}>{q.category}</span>
+                          <span className="pixel-badge wood-badge">~{q.est_minutes} min</span>
                           {pct > 0 && (
-                            <span className="pixel-badge pixel-badge--gold">{pct}%</span>
+                            <span className="pixel-badge wood-badge pixel-badge--gold">{pct}%</span>
                           )}
                         </div>
                         <p className="font-semibold" style={{ color: "var(--ink)" }}>
@@ -446,7 +450,7 @@ export default function DailyPage() {
                                     [q.id]: e.target.value,
                                   }))
                                 }
-                                className="w-24 px-2 py-1.5 text-sm border-2 border-[var(--frame-border)] bg-[var(--panel0)]"
+                                className="w-24 px-2 py-1.5 text-sm border-2 border-[var(--wood-dark)] bg-[var(--parchment)]"
                                 style={{ color: "var(--ink)" }}
                               />
                               <PixelButton

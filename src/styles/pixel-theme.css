@@ -1,47 +1,52 @@
 /**
- * Pixel-art fantasy theme V1 – Ascendancy Guild.
- * Brighter palette, textured panels, depth, subtle animations.
- * Revert: delete this file and remove its import from globals.css.
+ * Wood / tavern / dungeon theme – Ascendancy Guild.
+ * Depth levels: primary (page), secondary (panels), tertiary (cards).
+ * Revert: delete this file and remove import from globals.css.
  */
 
-/* ---- Palette (warm parchment, teal/emerald, gold, deep ink) ---- */
+/* ---- Palette ---- */
 :root {
-  --bg0: #3d2c1e;
-  --bg1: #2a1f16;
-  --panel0: #f5ead4;
-  --panel1: #e8d9bc;
-  --panel2: #ddc9a4;
-  --ink: #1a1410;
-  --muted: #5c4a3a;
-  --accent: #0d6b5c;
-  --accent2: #0a8c78;
-  --gold: #c9a227;
-  --gold-light: #e8d48a;
-  --danger: #a63d3d;
-  --frame-border: #6b5344;
-  --frame-shadow: #2a1f16;
+  --wood-dark: #3b2416;
+  --wood-mid: #6b3f1f;
+  --wood-light: #a86b3a;
+  --wood-muted: #2e1c12;
+  --parchment: #f2e1b3;
+  --parchment-dark: #e0cf9a;
+  --ink: #1b1b1b;
+  --muted: #5c5244;
+  --accent-red: #d6453d;
+  --accent-blue: #3d6dd6;
+  --accent-green: #4caf50;
+  --accent-gold: #e0b44c;
+  --danger: #d6453d;
 }
 
-/* Legacy aliases for gradual migration */
+/* Color system: Body=green, Mind=blue, Sustenance=gold, XP=gold, Streak=blue, Danger=red */
 :root {
-  --pixel-bg: var(--bg0);
-  --pixel-bg-subtle: var(--bg1);
-  --pixel-panel: var(--panel0);
-  --pixel-panel-dark: var(--panel1);
-  --pixel-border: var(--frame-border);
-  --pixel-border-dark: var(--frame-shadow);
-  --pixel-text: var(--ink);
-  --pixel-text-muted: var(--muted);
-  --pixel-highlight: var(--panel0);
-  --pixel-accent: var(--accent);
-  --pixel-accent-bright: var(--accent2);
+  --color-body: var(--accent-green);
+  --color-mind: var(--accent-blue);
+  --color-sustenance: var(--accent-gold);
+  --color-xp: var(--accent-gold);
+  --color-streak: var(--accent-blue);
 }
 
-/* ---- Layered background (base + dither) ---- */
-.pixel-theme-bg {
-  background-color: var(--bg0);
+/* Legacy aliases */
+:root {
+  --bg0: #4a3828;
+  --panel0: var(--parchment);
+  --panel1: var(--parchment-dark);
+  --frame-border: var(--wood-dark);
+  --frame-outline: var(--wood-dark);
+}
+
+/* ---- Background: wood texture (grain + streaks + vignette) ---- */
+.wood-bg,
+.pixel-theme-bg,
+.snes-bg {
+  min-height: 100vh;
+  background-color: #4a3828;
   background-image:
-    linear-gradient(165deg, var(--bg0) 0%, var(--bg1) 40%, var(--bg0) 100%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.25) 100%),
     repeating-linear-gradient(
       0deg,
       transparent 0px,
@@ -52,236 +57,451 @@
     repeating-linear-gradient(
       90deg,
       transparent 0px,
+      transparent 1px,
+      rgba(0, 0, 0, 0.03) 1px,
+      rgba(0, 0, 0, 0.03) 2px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(0, 0, 0, 0.02) 3px,
+      rgba(0, 0, 0, 0.02) 6px
+    );
+  color: var(--ink);
+}
+
+/* ---- Depth Level 1: Primary frame (page container) ---- */
+.wood-frame-primary {
+  position: relative;
+  border: 4px solid var(--wood-dark);
+  background-color: var(--wood-mid);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 4px,
+      rgba(0, 0, 0, 0.06) 4px,
+      rgba(0, 0, 0, 0.06) 8px
+    ),
+    linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 25%, var(--wood-dark) 100%);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.08),
+    inset 0 2px 0 rgba(255, 255, 255, 0.1),
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ---- Depth Level 2: Secondary panel (XP, character, scroll) ---- */
+.wood-frame-secondary {
+  position: relative;
+  border: 3px solid var(--wood-dark);
+  background-color: var(--wood-mid);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 4px,
+      rgba(0, 0, 0, 0.05) 4px,
+      rgba(0, 0, 0, 0.05) 8px
+    ),
+    linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 40%, var(--wood-dark) 100%);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.06),
+    inset 0 2px 4px rgba(0, 0, 0, 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ---- Depth Level 3: Tertiary card (quest rows) ---- */
+.wood-frame-tertiary {
+  position: relative;
+  border: 2px solid var(--wood-dark);
+  background-color: var(--wood-mid);
+  background-image: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 50%, var(--wood-dark) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+/* ---- Header: thick, carved inset, top highlight ---- */
+.wood-frame-header {
+  position: relative;
+  border: 4px solid var(--wood-dark);
+  background-color: var(--wood-mid);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 4px,
+      rgba(0, 0, 0, 0.05) 4px,
+      rgba(0, 0, 0, 0.05) 8px
+    ),
+    linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 35%, var(--wood-dark) 100%);
+  box-shadow:
+    inset 0 3px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.06),
+    inset 0 4px 8px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Legacy: .wood-frame maps to secondary */
+.wood-frame {
+  position: relative;
+  border: 3px solid var(--wood-dark);
+  background-color: var(--wood-mid);
+  background-image: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 30%, var(--wood-dark) 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.06),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ---- Parchment panel ---- */
+.parchment-panel,
+.snes-panel,
+.pixel-panel {
+  background-color: #f2e1b3;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
       transparent 2px,
       rgba(0, 0, 0, 0.02) 2px,
       rgba(0, 0, 0, 0.02) 4px
-    );
-  min-height: 100vh;
-}
-
-/* ---- Typography ---- */
-.pixel-title {
-  font-weight: 700;
-  letter-spacing: 0.04em;
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.015) 2px,
+      rgba(0, 0, 0, 0.015) 4px
+    ),
+    linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.06) 100%);
+  border: 2px solid var(--wood-dark);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   color: var(--ink);
-  text-shadow: 1px 1px 0 var(--panel0);
+  padding: 1.125rem 1.375rem;
 }
 
-.pixel-subtitle {
-  font-size: 0.9rem;
-  color: var(--muted);
-  font-weight: 600;
-}
-
-/* ---- Frame (thick pixel border + drop shadow) ---- */
-.pixel-frame {
+/* ---- Quest card: tertiary frame + parchment inner ---- */
+.quest-card,
+.snes-card,
+.pixel-card {
+  position: relative;
+  border: 2px solid var(--wood-dark);
+  background-color: var(--wood-mid);
+  background-image: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 50%, var(--wood-dark) 100%);
   box-shadow:
-    inset 0 0 0 4px var(--frame-border),
-    inset 0 0 0 6px var(--panel2),
-    inset 2px 2px 0 8px var(--panel1),
-    0 4px 0 var(--frame-shadow),
-    4px 6px 12px rgba(0, 0, 0, 0.35);
-  background: linear-gradient(180deg, var(--panel0) 0%, var(--panel1) 50%, var(--panel2) 100%);
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 2px 4px rgba(0, 0, 0, 0.12);
+  padding: 0;
+  overflow: hidden;
+  transition: box-shadow 0.15s ease;
+}
+
+.quest-card .quest-card__parchment,
+.snes-card .quest-card__parchment,
+.pixel-card .quest-card__parchment {
+  background-color: #f2e1b3;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.015) 2px, rgba(0,0,0,0.015) 4px);
+  border: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  padding: 1.125rem 1.375rem;
+  min-height: 100%;
+}
+
+.quest-card:hover,
+.snes-card:hover,
+.pixel-card:hover {
+  box-shadow:
+    0 0 0 2px var(--wood-light),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.quest-card.selected,
+.snes-card.selected,
+.pixel-card.selected {
+  box-shadow: 0 0 0 2px var(--accent-blue);
+}
+
+.quest-card--gold-badge::after,
+.pixel-card--sparkle::after,
+.snes-card--sparkle::after {
+  content: "★";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.875rem;
+  color: var(--accent-gold);
+  z-index: 2;
+  animation: goldShimmer 2.5s ease-in-out infinite;
+}
+
+.quest-card--gold-badge,
+.pixel-card--sparkle,
+.snes-card--sparkle {
   position: relative;
 }
 
-/* ---- Panel (parchment with inner shadow + texture) ---- */
-.pixel-panel {
-  background:
-    repeating-linear-gradient(
-      180deg,
-      transparent 0px,
-      transparent 4px,
-      rgba(0, 0, 0, 0.02) 4px,
-      rgba(0, 0, 0, 0.02) 8px
-    ),
-    linear-gradient(180deg, var(--panel0) 0%, var(--panel1) 40%, var(--panel2) 100%);
-  color: var(--ink);
-  padding: 1rem 1.25rem;
-  box-shadow:
-    inset 0 0 0 2px rgba(201, 162, 39, 0.25),
-    inset 0 2px 8px rgba(255, 255, 255, 0.4),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.06),
-    0 2px 0 var(--frame-border),
-    2px 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* ---- Card (clickable panel with hover) ---- */
-.pixel-card {
-  background:
-    repeating-linear-gradient(
-      180deg,
-      transparent 0px,
-      transparent 4px,
-      rgba(0, 0, 0, 0.015) 4px,
-      rgba(0, 0, 0, 0.015) 8px
-    ),
-    linear-gradient(180deg, var(--panel0) 0%, var(--panel1) 100%);
-  color: var(--ink);
-  padding: 1rem;
-  box-shadow:
-    inset 0 0 0 2px rgba(201, 162, 39, 0.2),
-    inset 0 2px 4px rgba(255, 255, 255, 0.3),
-    0 2px 0 var(--frame-border),
-    2px 3px 6px rgba(0, 0, 0, 0.15);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-.pixel-card:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    inset 0 0 0 2px rgba(201, 162, 39, 0.35),
-    inset 0 2px 4px rgba(255, 255, 255, 0.4),
-    0 3px 0 var(--frame-border),
-    3px 5px 10px rgba(0, 0, 0, 0.2);
-}
-
-.pixel-card.selected {
-  box-shadow:
-    inset 0 0 0 3px var(--accent),
-    inset 0 2px 6px rgba(255, 255, 255, 0.4),
-    0 2px 0 var(--frame-border),
-    2px 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* ---- Divider (rune-like) ---- */
-.pixel-divider {
-  height: 3px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--frame-border) 0px,
-    var(--frame-border) 4px,
-    var(--panel2) 4px,
-    var(--panel2) 8px
-  );
-  border: none;
-  margin: 0.75rem 0;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-/* ---- Badge / chip ---- */
-.pixel-badge {
+/* ---- Badges: Body=green, Mind=blue, Sustenance=gold, Streak=blue, XP=gold ---- */
+.pixel-badge,
+.snes-badge,
+.wood-badge {
   display: inline-block;
   padding: 0.25rem 0.6rem;
   font-size: 0.75rem;
   font-weight: 700;
-  background: linear-gradient(180deg, var(--panel2) 0%, var(--frame-border) 100%);
+  border: 2px solid var(--wood-dark);
+  background-color: var(--parchment-dark);
   color: var(--ink);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 1px 0 var(--frame-shadow);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-.pixel-badge--gold {
-  background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
+.pixel-badge--gold,
+.snes-badge--gold {
+  background-color: var(--accent-gold);
   color: var(--ink);
+  border-color: var(--wood-dark);
 }
 
-.pixel-badge--accent {
-  background: linear-gradient(180deg, var(--accent2) 0%, var(--accent) 100%);
-  color: var(--panel0);
+.pixel-badge--accent,
+.snes-badge--accent {
+  background-color: var(--accent-blue);
+  color: var(--parchment);
+  border-color: var(--wood-dark);
 }
 
-/* ---- Progress bar ---- */
+.pixel-badge--streak {
+  background-color: var(--color-streak);
+  color: var(--parchment);
+  border-color: var(--wood-dark);
+}
+
+.snes-badge--green,
+.pixel-badge--green {
+  background-color: var(--accent-green);
+  color: var(--ink);
+  border-color: var(--wood-dark);
+}
+
+.snes-badge--pink,
+.pixel-badge--pink {
+  background-color: var(--accent-red);
+  color: var(--parchment);
+  border-color: var(--wood-dark);
+}
+
+.snes-badge--blue,
+.pixel-badge--blue {
+  background-color: var(--accent-blue);
+  color: var(--parchment);
+  border-color: var(--wood-dark);
+}
+
+.badge-body { background-color: var(--color-body) !important; color: var(--ink) !important; }
+.badge-mind { background-color: var(--color-mind) !important; color: var(--parchment) !important; }
+.badge-sustenance { background-color: var(--color-sustenance) !important; color: var(--ink) !important; }
+
+/* ---- Segmented bar: dark empty segments, fill glow, shine sweep ---- */
+.segmented-bar,
+.snes-progress,
 .pixel-progress {
   height: 1.25rem;
-  background: var(--panel2);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  background-color: var(--wood-muted);
+  border: 2px solid var(--wood-dark);
   overflow: hidden;
-  border: 2px solid var(--frame-border);
+  position: relative;
 }
 
+.segmented-bar::before,
+.snes-progress::before,
+.pixel-progress::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 6px,
+    rgba(0, 0, 0, 0.5) 6px,
+    rgba(0, 0, 0, 0.5) 8px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.segmented-bar__fill,
+.snes-progress__fill,
 .pixel-progress__fill {
   height: 100%;
-  background: linear-gradient(180deg, var(--accent2) 0%, var(--accent) 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  transition: width 0.5s ease-out;
+  background-color: var(--accent-gold);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 8px rgba(224, 180, 76, 0.4);
+  transition: width 0.6s ease-out;
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
 }
 
-/* ---- Buttons (base; see PixelButton for primary/secondary) ---- */
-.pixel-button {
+.segmented-bar--xp .segmented-bar__fill {
+  background-color: var(--color-xp);
+}
+
+.segmented-bar--hp .segmented-bar__fill {
+  background-color: var(--accent-red);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 0 8px rgba(214, 69, 61, 0.35);
+}
+
+.segmented-bar__fill--animated {
+  animation: fillBar 0.6s ease-out;
+}
+
+.segmented-bar__fill--shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  animation: barShine 0.8s ease-out;
+}
+
+@keyframes barShine {
+  from { left: -100%; }
+  to { left: 150%; }
+}
+
+/* ---- Wood button: inner dark line, hover, active, click ---- */
+.wood-button,
+.pixel-button,
+.snes-button {
   display: inline-block;
   padding: 0.5rem 1rem;
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--ink);
-  background: linear-gradient(180deg, var(--panel0) 0%, var(--panel1) 100%);
-  border: 2px solid var(--frame-border);
+  background-color: var(--wood-mid);
+  background-image: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 100%);
+  border: 2px solid var(--wood-dark);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 2px 0 var(--frame-shadow);
+    inset 0 0 0 1px rgba(0, 0, 0, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.12),
+    0 2px 0 var(--wood-dark);
   cursor: pointer;
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  transition: filter 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
   text-decoration: none;
 }
 
-.pixel-button:hover {
-  background: linear-gradient(180deg, var(--panel0) 0%, var(--panel2) 100%);
+.wood-button:hover,
+.pixel-button:hover,
+.snes-button:hover {
+  filter: brightness(1.08);
+}
+
+.wood-button:active,
+.pixel-button:active,
+.snes-button:active {
+  transform: translateY(2px) scale(0.98);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 2px 0 var(--frame-shadow);
-  transform: translateY(-1px);
+    inset 0 0 0 1px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.pixel-button:active {
-  transform: translateY(1px);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-.pixel-button:disabled {
+.wood-button:disabled,
+.pixel-button:disabled,
+.snes-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
-.pixel-button:focus-visible {
-  outline: 2px solid var(--accent);
+.wood-button:focus-visible,
+.pixel-button:focus-visible,
+.snes-button:focus-visible {
+  outline: 2px solid var(--accent-blue);
   outline-offset: 2px;
 }
 
-/* Primary (teal) */
-.pixel-button--primary {
-  background: linear-gradient(180deg, var(--accent2) 0%, var(--accent) 100%);
-  color: var(--panel0);
-  border-color: #064d43;
+.wood-button--primary,
+.pixel-button--primary,
+.snes-button--primary {
+  background-color: var(--accent-blue);
+  background-image: none;
+  color: var(--parchment);
+  border-color: var(--wood-dark);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 2px 0 #064d43;
+    inset 0 0 0 1px rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    0 2px 0 var(--wood-dark);
 }
 
-.pixel-button--primary:hover {
-  background: linear-gradient(180deg, #0e9a85 0%, var(--accent2) 100%);
+.wood-button--primary:hover,
+.pixel-button--primary:hover,
+.snes-button--primary:hover {
+  filter: brightness(1.1);
+}
+
+/* ---- Streak star: blue ---- */
+.streak-star {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: var(--color-streak);
+  border: 2px solid var(--wood-dark);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  flex-shrink: 0;
+}
+
+/* ---- Typography ---- */
+.pixel-title,
+.snes-title,
+.wood-title {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.pixel-subtitle,
+.snes-subtitle {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 600;
 }
 
 /* ---- Animations ---- */
-@keyframes pixelBob {
+@keyframes fillBar {
+  from { width: 0 !important; }
+}
+
+@keyframes spriteIdleFloat {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
+  50% { transform: translateY(-1px); }
 }
 
-@keyframes pixelShimmer {
-  0% { background-position: -100% 0; }
-  100% { background-position: 200% 0; }
+@keyframes goldShimmer {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
 }
 
-@keyframes pixelSparkle {
-  0%, 100% { opacity: 1; filter: brightness(1); }
-  50% { opacity: 0.95; filter: brightness(1.15); }
+.sprite-idle {
+  animation: spriteIdleFloat 3s ease-in-out infinite;
 }
 
-@keyframes pixelFill {
-  from { width: 0; }
-}
-
-.pixel-card--sparkle {
-  animation: pixelSparkle 2s ease-in-out infinite;
-}
-
-.pixel-card:hover {
-  animation: none;
-}
-
-.pixel-progress__fill--animated {
-  animation: pixelFill 0.6s ease-out;
+.snes-header-sparkle {
+  display: none;
 }

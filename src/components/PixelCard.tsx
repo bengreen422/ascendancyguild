@@ -21,9 +21,9 @@ export function PixelCard({
   as: Component = "div",
 }: PixelCardProps) {
   const classes = [
-    "pixel-card",
+    "quest-card pixel-card snes-card",
     selected ? "selected" : "",
-    sparkle ? "pixel-card--sparkle" : "",
+    sparkle ? "quest-card--gold-badge pixel-card--sparkle snes-card--sparkle" : "",
     onClick ? "cursor-pointer" : "",
     className,
   ]
@@ -53,7 +53,7 @@ export function PixelCard({
           : undefined
       }
     >
-      {children}
+      <div className="quest-card__parchment">{children}</div>
     </Component>
   );
 }
